@@ -4,9 +4,12 @@ const mongoose = require('mongoose');
 const app = express();
 const userRoute = require('./routes/user-route')
 const path = require('path')
+const cors = require('cors')
 
 
 const PORT = 8080 || process.env.PORT;
+
+app.use(cors());
 
 //Function to connect the db
 const connectDb = async () => {

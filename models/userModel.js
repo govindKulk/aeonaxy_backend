@@ -27,14 +27,16 @@ const userSchema = new Schema({
         default: false
     },
     otl: {
-        type: String,
-        default: null
+        type: String
+    },
+    otlExpiresAt: {
+        type: Date
     }
 })
 
 //Signup method/function to hash the password and validate the email
-userSchema.statics.signup = async function(email, password, name, username){
-
+userSchema.statics.signup = async function(userData){
+    const {email, password, name, username, otlToken, otlExpiry: otlExpiresAt} = userData;
     //Validation checks
     if(!email || !password || !name || !username){
         throw Error("All fields are required");
@@ -61,7 +63,7 @@ userSchema.statics.signup = async function(email, password, name, username){
     //Generating the salt and then hash for the password    
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt)
-    const user = await this.create({email, password: hash, name, username});
+    const user = await this.create({email, password: hash, name, username, otl: otlToken, otlExpiresAt});
 
     //returns the created user
     return user;
