@@ -4,12 +4,18 @@ const mongoose = require('mongoose');
 const app = express();
 const userRoute = require('./routes/user-route')
 const path = require('path')
-const cors = require('cors')
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const User = require('./models/userModel');
 
 
 const PORT = 8080 || process.env.PORT;
 
-app.use(cors());
+app.use(cors({
+  credentials: true,
+  origin: "http://localhost:3000"
+}));
+app.use(cookieParser());
 
 //Function to connect the db
 const connectDb = async () => {
@@ -27,7 +33,10 @@ app.use((req, res, next)=>{
     next();
 })
 
-app.get('/', (req, res) => res.send("Hello World"));
+app.get('/', async (req, res) => {
+  const users = await User.find()
+  res.status(200).json({users})
+});
 
 
 //Routes

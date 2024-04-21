@@ -31,6 +31,12 @@ const userSchema = new Schema({
     },
     otlExpiresAt: {
         type: Date
+    },
+    location: {
+        type: String
+    },
+    profilePic: {
+        type: String
     }
 })
 
@@ -70,12 +76,12 @@ userSchema.statics.signup = async function(userData){
 }
 
 //Login method/function to login the users by checking the credentials
-userSchema.statics.login = async function(email, password, username, name){
+userSchema.statics.login = async function( username, password){
     //Validation checks
-    if(!email || !password || !name || !username){
+    if(!password || !username){
         throw Error("All fields are required");
     }
-    const user = await this.findOne({email});
+    const user = await this.findOne({username});
 
     if(!user){
         throw Error("User not found, please signup or register first")
